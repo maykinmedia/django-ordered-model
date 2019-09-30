@@ -89,6 +89,9 @@ class OrderedModelAdmin(BaseOrderedModelAdmin, admin.ModelAdmin):
 
         getattr(obj, direction)()
 
+        if 'Referer' in request.headers:
+            return HttpResponseRedirect(request.headers.get('Referer'))
+
         # guts from request.get_full_path(), calculating ../../ and restoring GET arguments
         mangled = "/".join(escape_uri_path(request.path).split("/")[0:-3])
         redir_path = "%s%s%s" % (
@@ -185,6 +188,9 @@ class OrderedInlineMixin(BaseOrderedModelAdmin):
             raise Http404
 
         getattr(obj, direction)()
+
+        if 'Referer' in request.headers:
+            return HttpResponseRedirect(request.headers.get('Referer'))
 
         # guts from request.get_full_path(), calculating ../../ and restoring GET arguments
         mangled = "/".join(escape_uri_path(request.path).split("/")[0:-4] + ["change"])
